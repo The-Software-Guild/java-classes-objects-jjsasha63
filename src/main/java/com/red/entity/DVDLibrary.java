@@ -1,20 +1,24 @@
 package com.red.entity;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
-import java.util.Date;
+import java.time.LocalDate;
 
-public class DVDLibrary {
+/**
+ * This class is a POJO that represents a DVD
+ */
+public class DVDLibrary implements Serializable {
 
     private static transient final DecimalFormat df = new DecimalFormat("0.00");
     private int id;
     private String title;
-    private Date releaseDate;
+    private LocalDate releaseDate;
     private Double MPAARating;
     private String directorName;
     private String studio;
     private Double userRating;
 
-    public DVDLibrary(int id, String title, Date releaseDate, Double MPAARating, String directorName, String studio, Double userRating) {
+    public DVDLibrary(int id, String title, LocalDate releaseDate, Double MPAARating, String directorName, String studio, Double userRating) {
         this.id = id;
         this.title = title;
         this.releaseDate = releaseDate;
@@ -41,11 +45,11 @@ public class DVDLibrary {
         this.title = title;
     }
 
-    public Date getReleaseDate() {
+    public LocalDate getReleaseDate() {
         return releaseDate;
     }
 
-    public void setReleaseDate(Date releaseDate) {
+    public void setReleaseDate(LocalDate releaseDate) {
         this.releaseDate = releaseDate;
     }
 
@@ -111,14 +115,14 @@ public class DVDLibrary {
 
     @Override
     public String toString() {
-        return "DVDLibrary{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", releaseDate=" + releaseDate +
-                ", MPAARating=" + df.format(MPAARating) +
-                ", DirectorName='" + directorName + '\'' +
-                ", Studio='" + studio + '\'' +
-                ", UserRating=" + df.format(userRating) +
-                '}';
+        return "\nDVD {\n" +
+                "id - " + id +
+                ",\ntitle - " + title +
+                ",\nreleaseDate - " + releaseDate +
+                ",\nMPAARating - " + df.format(MPAARating) +
+                ",\nDirectorName - " + directorName +
+                ",\nStudio - " + studio +
+                ",\nUserRating - " + df.format(userRating) +
+                "\n}";
     }
 }
