@@ -15,14 +15,15 @@ public class AppController {
     private static Logger logger = Logger.getLogger(AppController.class.getName());
     private DVDLibraryDAO dvdLibraryDAO;
 
-    public AppController(){dvdLibraryDAO = new DVDLibraryDAO(logger);}
+    public AppController() {
+        dvdLibraryDAO = new DVDLibraryDAO(logger);
+    }
 
     public static void main(String[] args) throws ParseException {
         AppController appController = new AppController();
         appController.session(appController.dvdLibraryDAO);
 
     }
-
 
     /**
      * It's a recursive function that displays a menu, takes user's choice, performs the corresponding action and calls
@@ -32,14 +33,14 @@ public class AppController {
      */
     private void session(DVDLibraryDAO dvdLibraryDAO) throws ParseException {
         int id;
-        String title,date,director,studio;
+        String title, date, director, studio;
         Double MPAARating, userRating;
         Scanner scanner = new Scanner(System.in);
         menu();
         logger.info("Your choice: ");
-        int choice  = scanner.nextInt();
+        int choice = scanner.nextInt();
 
-        switch (choice){
+        switch (choice) {
             case 1:
                 dvdLibraryDAO.toFile();
                 break;
@@ -61,7 +62,7 @@ public class AppController {
                 studio = scanner.nextLine();
                 logger.info("-User rating- ");
                 userRating = scanner.nextDouble();
-                dvdLibraryDAO.addDVD(title,date,MPAARating,director,studio,userRating);
+                dvdLibraryDAO.addDVD(title, date, MPAARating, director, studio, userRating);
                 break;
             case 4:
                 logger.info("\n-Enter the DVD' id- ");
@@ -74,24 +75,24 @@ public class AppController {
                 logger.info("Enter new record or type 'keep' or 9999 for numeric fields to keep existing one:\n-Title- ");
                 scanner.nextLine();
                 title = scanner.nextLine();
-                if(title.equals("keep")) title = dvdLibrary.getTitle();
+                if (title.equals("keep")) title = dvdLibrary.getTitle();
                 logger.info("-Release date (dd/mm/yyyy)- ");
                 date = scanner.nextLine();
-                if(date.equals("keep")) date = dvdLibrary.getReleaseDate().toString();
+                if (date.equals("keep")) date = dvdLibrary.getReleaseDate().toString();
                 logger.info("-MPAA rating- ");
                 MPAARating = scanner.nextDouble();
-                if(MPAARating == (double) 9999) MPAARating = dvdLibrary.getMPAARating();
+                if (MPAARating == (double) 9999) MPAARating = dvdLibrary.getMPAARating();
                 logger.info("-Director- ");
                 scanner.nextLine();
                 director = scanner.nextLine();
-                if(director.equals("keep")) director = dvdLibrary.getDirectorName();
+                if (director.equals("keep")) director = dvdLibrary.getDirectorName();
                 logger.info("-Studio- ");
                 studio = scanner.nextLine();
-                if(studio.equals("keep")) studio = dvdLibrary.getStudio();
+                if (studio.equals("keep")) studio = dvdLibrary.getStudio();
                 logger.info("-User rating- ");
                 userRating = scanner.nextDouble();
-                if(userRating == (double) 9999) userRating = dvdLibrary.getUserRating();
-                dvdLibraryDAO.editDVD(id,title,date,MPAARating,director,studio,userRating);
+                if (userRating == (double) 9999) userRating = dvdLibrary.getUserRating();
+                dvdLibraryDAO.editDVD(id, title, date, MPAARating, director, studio, userRating);
                 break;
             case 6:
                 logger.info("\n-Enter the DVD' title- ");
@@ -114,13 +115,13 @@ public class AppController {
                 session(dvdLibraryDAO);
                 break;
         }
-        if(choice!=0) session(dvdLibraryDAO);
+        if (choice != 0) session(dvdLibraryDAO);
     }
 
     /**
      * This function is used to display the menu options to the user
      */
-    private static void menu(){
+    private static void menu() {
         logger.info("\n-DVD Library-\n" + "-MENU-\n" +
                 "1 - Save a DVD Library from a file\n" +
                 "2 - Load a DVD Library to a file\n" +

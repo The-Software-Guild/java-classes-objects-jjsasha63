@@ -20,9 +20,11 @@ public class DVDLibraryDAO implements DVDLibraryDAOI {
     // It's a static variable that stores the list of DVDLibrary objects.
     private static List<DVDLibrary> dvds;
 
-    static { dvds = new ArrayList<>();}
+    static {
+        dvds = new ArrayList<>();
+    }
 
-    public DVDLibraryDAO(Logger logger){
+    public DVDLibraryDAO(Logger logger) {
         this.logger = logger;
     }
 
@@ -30,20 +32,20 @@ public class DVDLibraryDAO implements DVDLibraryDAOI {
     /**
      * The function takes in a title, date, MPAARating, director, studio, and userRating and adds it to the list of DVD Library
      *
-     * @param title The title of the DVD
-     * @param date The date the DVD was released.
+     * @param title      The title of the DVD
+     * @param date       The date the DVD was released.
      * @param MPAARating The MPAA rating of the DVD. This is a double value between 0 and 10.
-     * @param director The director of the movie
-     * @param studio The studio that produced the movie
+     * @param director   The director of the movie
+     * @param studio     The studio that produced the movie
      * @param userRating The user's rating of the DVD
      */
     @Override
     public void addDVD(String title, String date, Double MPAARating, String director, String studio, Double userRating) {
         LocalDate dt = null;
-        if(null != date && date.trim().length() > 0) dt = LocalDate.parse(date,format);
+        if (null != date && date.trim().length() > 0) dt = LocalDate.parse(date, format);
         MPAARating = MPAARating > 10 ? 10 : MPAARating < 0 ? 0 : MPAARating;
         userRating = userRating > 10 ? 10 : userRating < 0 ? 0 : userRating;
-        dvds.add(new DVDLibrary(id(),title,dt,MPAARating,director,studio,userRating));
+        dvds.add(new DVDLibrary(id(), title, dt, MPAARating, director, studio, userRating));
         logger.info("The DVD was added");
     }
 
@@ -56,32 +58,32 @@ public class DVDLibraryDAO implements DVDLibraryDAOI {
     @Override
     public void deleteDVD(int id) {
         DVDLibrary dvdLibrary = findById(id);
-       if(!dvdLibrary.equals(null)){
-           dvds.remove(dvdLibrary);
-           logger.info("The DVD was successfully deleted");
-       } else logger.warning("There's no such DVD");
+        if (!dvdLibrary.equals(null)) {
+            dvds.remove(dvdLibrary);
+            logger.info("The DVD was successfully deleted");
+        } else logger.warning("There's no such DVD");
     }
 
     /**
      * If the DVD exists, update it with the new values
      *
-     * @param id the id of the DVD to be edited
-     * @param title The title of the DVD
-     * @param date The date the DVD was released
+     * @param id         the id of the DVD to be edited
+     * @param title      The title of the DVD
+     * @param date       The date the DVD was released
      * @param MPAARating The MPAA rating of the movie.
-     * @param director The director of the movie
-     * @param studio The studio that produced the movie
+     * @param director   The director of the movie
+     * @param studio     The studio that produced the movie
      * @param userRating The user's rating of the movie
      */
     @Override
     public void editDVD(int id, String title, String date, Double MPAARating, String director, String studio, Double userRating) {
         DVDLibrary dvdLibrary = findById(id);
-        if(!dvdLibrary.equals(null)){
+        if (!dvdLibrary.equals(null)) {
             LocalDate dt = null;
-            if(null != date && date.trim().length() > 0) dt = LocalDate.parse(date,format);
+            if (null != date && date.trim().length() > 0) dt = LocalDate.parse(date, format);
             MPAARating = MPAARating > 10 ? 10 : MPAARating < 0 ? 0 : MPAARating;
             userRating = userRating > 10 ? 10 : userRating < 0 ? 0 : userRating;
-            dvds.set(id,new DVDLibrary(id,title,dt,MPAARating,director,studio,userRating));
+            dvds.set(id, new DVDLibrary(id, title, dt, MPAARating, director, studio, userRating));
             logger.info("The DVD was successfully updated");
         } else logger.warning("There's no such DVD");
     }
@@ -92,8 +94,7 @@ public class DVDLibraryDAO implements DVDLibraryDAOI {
     @Override
     public void showAll() {
         if (dvds.isEmpty()) logger.warning("The library is empty");
-        else for(DVDLibrary dvdLibrary:dvds) logger.info(dvdLibrary.toString());
-
+        else for (DVDLibrary dvdLibrary : dvds) logger.info(dvdLibrary.toString());
     }
 
     /**
@@ -104,7 +105,7 @@ public class DVDLibraryDAO implements DVDLibraryDAOI {
     @Override
     public void showDVD(String title) {
         DVDLibrary dvdLibrary = findByTitle(title);
-        if(dvdLibrary != null) logger.info(dvdLibrary.toString());
+        if (dvdLibrary != null) logger.info(dvdLibrary.toString());
         else logger.warning("There's no such DVD");
     }
 
@@ -113,9 +114,9 @@ public class DVDLibraryDAO implements DVDLibraryDAOI {
      *
      * @return The id of the next DVD.
      */
-    protected int id(){
-        if(dvds.isEmpty()) return 0;
-        else return dvds.get(dvds.size()-1).getId() + 1;
+    protected int id() {
+        if (dvds.isEmpty()) return 0;
+        else return dvds.get(dvds.size() - 1).getId() + 1;
     }
 
     /**
@@ -125,7 +126,7 @@ public class DVDLibraryDAO implements DVDLibraryDAOI {
      * @return The DVDLibrary object with the matching id.
      */
     @Override
-    public DVDLibrary findById(int id){
+    public DVDLibrary findById(int id) {
         DVDLibrary dvdLibrary = dvds.stream().filter(dvd -> (id == dvd.getId())).findAny().orElse(null);
         return dvdLibrary;
     }
@@ -135,14 +136,12 @@ public class DVDLibraryDAO implements DVDLibraryDAOI {
      */
     @Override
     public void toFile() {
-        try(ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("src/main/resources/DVDLibrary.lbb"))){
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("src/main/resources/DVDLibrary.lbb"))) {
             out.writeObject(dvds);
             logger.info("The library was successfully saved");
-        }
-        catch (IOException exception){
+        } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
-
     }
 
     /**
@@ -150,12 +149,11 @@ public class DVDLibraryDAO implements DVDLibraryDAOI {
      */
     @Override
     public void fromFile() {
-        try(ObjectInputStream in = new ObjectInputStream(new FileInputStream("src/main/resources/DVDLibrary.lbb"))){
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("src/main/resources/DVDLibrary.lbb"))) {
             dvds.clear();
             dvds = (ArrayList) in.readObject();
             logger.info("The library was successfully loaded");
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
@@ -170,7 +168,7 @@ public class DVDLibraryDAO implements DVDLibraryDAOI {
      * @return The DVDLibrary object is being returned.
      */
     @Override
-    public DVDLibrary findByTitle(String title){
+    public DVDLibrary findByTitle(String title) {
         DVDLibrary dvdLibrary = dvds.stream().filter(dvd -> (title.equals(dvd.getTitle()))).findAny().orElse(null);
         return dvdLibrary;
     }
@@ -178,7 +176,7 @@ public class DVDLibraryDAO implements DVDLibraryDAOI {
     /**
      * This function clears the list of dvds
      */
-    public void clear(){
+    public void clear() {
         dvds.clear();
     }
 }

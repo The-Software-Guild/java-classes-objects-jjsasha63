@@ -10,7 +10,7 @@ public interface DVDLibraryDAOI {
 
     public void deleteDVD(int id);
 
-    public void editDVD(int id,String title, String date, Double MPAARating, String director, String studio, Double userRating);
+    public void editDVD(int id, String title, String date, Double MPAARating, String director, String studio, Double userRating);
 
     public void showAll();
 
