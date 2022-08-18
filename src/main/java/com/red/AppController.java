@@ -1,5 +1,6 @@
 package com.red;
 
+import com.red.dao.DVDLibraryDAOI;
 import com.red.dao.DVDLibraryDAO;
 import com.red.entity.DVDLibrary;
 
@@ -13,7 +14,7 @@ import java.util.logging.Logger;
 public class AppController {
 
     private static Logger logger = Logger.getLogger(AppController.class.getName());
-    private DVDLibraryDAO dvdLibraryDAO;
+    private DVDLibraryDAOI dvdLibraryDAO;
 
     public AppController() {
         dvdLibraryDAO = new DVDLibraryDAO(logger);
@@ -31,7 +32,7 @@ public class AppController {
      *
      * @param dvdLibraryDAO the DAO object that will be used to perform the CRUD operations.
      */
-    private void session(DVDLibraryDAO dvdLibraryDAO) throws ParseException {
+    private void session(DVDLibraryDAOI dvdLibraryDAO) throws ParseException {
         int id;
         String title, date, director, studio;
         Double MPAARating, userRating;

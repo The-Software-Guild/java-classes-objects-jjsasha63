@@ -24,4 +24,6 @@ public interface DVDLibraryDAOI {
 
     public void fromFile();
 
+    public void clear();
+
 }

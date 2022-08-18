@@ -176,6 +176,7 @@ public class DVDLibraryDAO implements DVDLibraryDAOI {
     /**
      * This function clears the list of dvds
      */
+    @Override
     public void clear() {
         dvds.clear();
     }
