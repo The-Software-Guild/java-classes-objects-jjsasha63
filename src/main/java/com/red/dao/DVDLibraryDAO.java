@@ -1,5 +1,6 @@
 package com.red.dao;
 
+import com.red.AppController;
 import com.red.entity.DVDLibrary;
 
 import java.io.*;
@@ -15,18 +16,16 @@ import java.util.logging.Logger;
 public class DVDLibraryDAO implements DVDLibraryDAOI {
 
     private static DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    private Logger logger;
+    private static Logger logger;
 
     // It's a static variable that stores the list of DVDLibrary objects.
     private static List<DVDLibrary> dvds;
 
     static {
         dvds = new ArrayList<>();
+        logger = Logger.getLogger(DVDLibraryDAO.class.getName());
     }
 
-    public DVDLibraryDAO(Logger logger) {
-        this.logger = logger;
-    }
 
 
     /**
