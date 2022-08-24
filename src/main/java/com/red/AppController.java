@@ -13,6 +13,10 @@ import java.util.Scanner;
 public class AppController {
 
     private DVDLibraryDAOI dvdLibraryDAO;
+    public static final String RED = "\u001B[31m";
+    public static final String GREEN = "\u001B[32m";
+    public static final String RESET = "\u001B[0m";
+
 
     public AppController() {
         this.dvdLibraryDAO = new DVDLibraryDAO();
@@ -20,101 +24,101 @@ public class AppController {
 
     public static void main(String[] args) throws ParseException {
         AppController appController = new AppController();
-        appController.session(appController.dvdLibraryDAO);
+        appController.session();
 
     }
 
-    /**
-     * It's a recursive function that displays a menu, takes user's choice, performs the corresponding action and calls
-     * itself again
-     *
-     * @param dvdLibraryDAO the DAO object that will be used to perform the CRUD operations.
-     */
-    private void session(DVDLibraryDAOI dvdLibraryDAO) throws ParseException {
-        int id;
-        String title, date, director, studio;
-        Double MPAARating, userRating;
-        Scanner scanner = new Scanner(System.in);
-        menu();
-        info("Your choice: ");
-        int choice = scanner.nextInt();
+    private void session() throws ParseException {
+        while(true) {
+            Scanner scanner = new Scanner(System.in);
+            menu();
+            info("Your choice: ");
+            int choice = scanner.nextInt();
 
-        switch (choice) {
-            case 1:
-                dvdLibraryDAO.toFile();
-                break;
-            case 2:
-                dvdLibraryDAO.fromFile();
-                break;
-            case 3:
-                info("\nAdd new dvd\nEnter:\n-Title- ");
-                scanner.nextLine();
-                title = scanner.nextLine();
-                info("-Release date (dd/mm/yyyy)- ");
-                date = scanner.nextLine();
-                info("-MPAA rating- ");
-                MPAARating = scanner.nextDouble();
-                info("-Director- ");
-                scanner.nextLine();
-                director = scanner.nextLine();
-                info("-Studio- ");
-                studio = scanner.nextLine();
-                info("-User rating- ");
-                userRating = scanner.nextDouble();
-                dvdLibraryDAO.addDVD(title, date, MPAARating, director, studio, userRating);
-                break;
-            case 4:
-                info("\n-Enter the DVD' id- ");
-                dvdLibraryDAO.deleteDVD(scanner.nextInt());
-                break;
-            case 5:
-                info("\nEdit a dvd\n-Enter DVD' id- ");
-                id = scanner.nextInt();
-                DVDLibrary dvdLibrary = dvdLibraryDAO.findById(id);
-                info("Enter new record or type 'keep' or 9999 for numeric fields to keep existing one:\n-Title- ");
-                scanner.nextLine();
-                title = scanner.nextLine();
-                if (title.equals("keep")) title = dvdLibrary.getTitle();
-                info("-Release date (dd/mm/yyyy)- ");
-                date = scanner.nextLine();
-                if (date.equals("keep")) date = dvdLibrary.getReleaseDate().toString();
-                info("-MPAA rating- ");
-                MPAARating = scanner.nextDouble();
-                if (MPAARating == (double) 9999) MPAARating = dvdLibrary.getMPAARating();
-                info("-Director- ");
-                scanner.nextLine();
-                director = scanner.nextLine();
-                if (director.equals("keep")) director = dvdLibrary.getDirectorName();
-                info("-Studio- ");
-                studio = scanner.nextLine();
-                if (studio.equals("keep")) studio = dvdLibrary.getStudio();
-                info("-User rating- ");
-                userRating = scanner.nextDouble();
-                if (userRating == (double) 9999) userRating = dvdLibrary.getUserRating();
-                dvdLibraryDAO.editDVD(id, title, date, MPAARating, director, studio, userRating);
-                break;
-            case 6:
-                info("\n-Enter the DVD' title- ");
-                scanner.nextLine();
-                title = scanner.nextLine();
-                dvdLibraryDAO.showDVD(title);
-                break;
-            case 7:
-                dvdLibraryDAO.showAll();
-                break;
-            case 8:
-                dvdLibraryDAO.clear();
-                info("The library is empty now");
-                break;
-            case 9:
-                choice = 0;
-                break;
-            default:
-                warning("Wrong entry\nTry again");
-                session(dvdLibraryDAO);
-                break;
+            switch (choice) {
+                case 1:
+                    dvdLibraryDAO.toFile();
+                    break;
+                case 2:
+                    dvdLibraryDAO.fromFile();
+                    break;
+                case 3:
+                    add(scanner);
+                    break;
+                case 4:
+                    info("\n-Enter the DVD' id- ");
+                    dvdLibraryDAO.deleteDVD(scanner.nextInt());
+                    break;
+                case 5:
+                    edit(scanner);
+                    break;
+                case 6:
+                    info("\n-Enter the DVD' title- ");
+                    scanner.nextLine();
+                    String title = scanner.nextLine();
+                    dvdLibraryDAO.showDVD(title);
+                    break;
+                case 7:
+                    dvdLibraryDAO.showAll();
+                    break;
+                case 8:
+                    dvdLibraryDAO.clear();
+                    info("The library is empty now");
+                    break;
+                case 9:
+                    choice = 0;
+                    break;
+                default:
+                    warning("Wrong entry\nTry again");
+                    break;
+            }
+            if (choice == 0) break;
         }
-        if (choice != 0) session(dvdLibraryDAO);
+    }
+
+    private void add(Scanner scanner){
+        info("\nAdd new dvd\nEnter:\n-Title- ");
+        scanner.nextLine();
+        String title = scanner.nextLine();
+        info("-Release date (dd/mm/yyyy)- ");
+        String date = scanner.nextLine();
+        info("-MPAA rating- ");
+        Double MPAARating = scanner.nextDouble();
+        info("-Director- ");
+        scanner.nextLine();
+        String director = scanner.nextLine();
+        info("-Studio- ");
+        String studio = scanner.nextLine();
+        info("-User rating- ");
+        Double userRating = scanner.nextDouble();
+        dvdLibraryDAO.addDVD(title, date, MPAARating, director, studio, userRating);
+    }
+
+    private void edit(Scanner scanner){
+        info("\nEdit a dvd\n-Enter DVD' id- ");
+        int id = scanner.nextInt();
+        DVDLibrary dvdLibrary = dvdLibraryDAO.findById(id);
+        info("Enter new record or type 'keep' or 9999 for numeric fields to keep existing one:\n-Title- ");
+        scanner.nextLine();
+        String title = scanner.nextLine();
+        if (title.equals("keep")) title = dvdLibrary.getTitle();
+        info("-Release date (dd/mm/yyyy)- ");
+        String date = scanner.nextLine();
+        if (date.equals("keep")) date = dvdLibrary.getReleaseDate().toString();
+        info("-MPAA rating- ");
+        Double MPAARating = scanner.nextDouble();
+        if (MPAARating == (double) 9999) MPAARating = dvdLibrary.getMPAARating();
+        info("-Director- ");
+        scanner.nextLine();
+        String director = scanner.nextLine();
+        if (director.equals("keep")) director = dvdLibrary.getDirectorName();
+        info("-Studio- ");
+        String studio = scanner.nextLine();
+        if (studio.equals("keep")) studio = dvdLibrary.getStudio();
+        info("-User rating- ");
+        Double userRating = scanner.nextDouble();
+        if (userRating == (double) 9999) userRating = dvdLibrary.getUserRating();
+        dvdLibraryDAO.editDVD(id, title, date, MPAARating, director, studio, userRating);
     }
 
     /**
@@ -134,11 +138,11 @@ public class AppController {
     }
 
     private static void info(String message){
-        System.out.println("\u001B[33m" + message + "\u001B[0m");
+        System.out.println(GREEN + message + RESET);
     }
 
     private static void warning(String message){
-        System.out.println("\u001B[35m" + message + "\u001B[0m");
+        System.out.println(RED + message + RESET);
     }
 
 }
